@@ -5,31 +5,40 @@ import (
 	"time"
 )
 
-func processA() {
+func processA(c chan<- string) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("result a")
+	c <- "result a"
 }
 
-func processB() {
+func processB(c chan<- string) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("result b")
+	c <- "result b"
 }
 
-func processC() {
+func processC(c chan<- string) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("result c")
+	c <- "result c"
 }
 
-func processD() {
+func processD(c chan<- string) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("result d")
+	c <- "result d"
 }
 
 func main() {
 	start := time.Now()
-	go processA()
-	go processB()
-	go processC()
-	go processD()
+
+	c := make(chan string, 4)
+
+	go processA(c)
+	go processB(c)
+	go processC(c)
+	go processD(c)
+
+	fmt.Printf("res1: %v\n", <-c)
+	fmt.Printf("res2: %v\n", <-c)
+	fmt.Printf("res3: %v\n", <-c)
+	fmt.Printf("res4: %v\n", <-c)
+
 	fmt.Printf("Use time : %v\n", time.Since(start))
 }
